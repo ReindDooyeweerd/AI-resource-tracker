@@ -14,6 +14,10 @@ A lightweight macOS menu bar app that tracks your Claude Code API usage in real-
 - 🔐 **Secure Authentication** - Uses your existing Claude Code credentials from Keychain
 - 🎨 **Native macOS Design** - Clean, modern SwiftUI interface
 
+![CleanShot 2026-02-16 at 12 01 22@2x](https://github.com/user-attachments/assets/7aa12e59-cf51-40c3-918d-9f10f4bb1f33)
+![CleanShot 2026-02-16 at 12 00 05@2x](https://github.com/user-attachments/assets/0ec02c19-0085-4b24-a8bf-398f0507707f)
+![CleanShot 2026-02-16 at 11 36 48@2x](https://github.com/user-attachments/assets/f7df376b-99a7-4ea5-8580-117af99fac0b)
+
 ## Requirements
 
 - macOS 12.0 or later
