@@ -8,9 +8,6 @@ struct AI_resource_trackerApp: App {
     var body: some Scene {
         MenuBarExtra {
             PopoverView(viewModel: viewModel, authManager: authManager)
-                .onAppear {
-                    viewModel.configure(with: authManager)
-                }
         } label: {
             HStack(spacing: 4) {
                 Image("BrainIcon")
@@ -21,7 +18,14 @@ struct AI_resource_trackerApp: App {
                 Text(viewModel.menuBarLabel)
                     .monospacedDigit()
             }
+            .task {
+                viewModel.configure(with: authManager)
+            }
         }
         .menuBarExtraStyle(.window)
+
+        Settings {
+            SettingsView()
+        }
     }
 }

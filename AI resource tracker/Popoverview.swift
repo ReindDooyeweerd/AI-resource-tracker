@@ -3,7 +3,6 @@ import SwiftUI
 struct PopoverView: View {
     @ObservedObject var viewModel: UsageViewModel
     @ObservedObject var authManager: AuthManager
-
     var body: some View {
         VStack(spacing: 0) {
             if !authManager.isAuthenticated {
@@ -13,7 +12,7 @@ struct PopoverView: View {
             } else {
                 ForEach(Array(viewModel.usages.enumerated()), id: \.offset) { _, usage in
                     ProviderCard(usage: usage)
-                    
+
                     if usage.providerName != viewModel.usages.last?.providerName {
                         Divider()
                             .padding(.horizontal, 16)
@@ -29,16 +28,14 @@ struct PopoverView: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                 Spacer()
-                
-                Button("Open at Login...") {
-                    if let url = URL(string: "x-apple.systempreferences:com.apple.LoginItems-Settings.extension") {
-                        NSWorkspace.shared.open(url)
-                    }
+
+                SettingsLink {
+                    Image(systemName: "gear")
                 }
                 .buttonStyle(.plain)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
-                
+
                 Button("Quit") {
                     NSApplication.shared.terminate(nil)
                 }
@@ -50,54 +47,77 @@ struct PopoverView: View {
             .padding(.vertical, 8)
         }
         .frame(width: 300)
-        .onAppear {
-            viewModel.configure(with: authManager)
-        }
     }
 
     private var notAuthenticatedView: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Image(systemName: "terminal")
-                    .font(.system(size: 32))
-                    .foregroundStyle(.secondary)
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Not Signed In")
-                        .font(.headline)
-                    Text("Sign in via Terminal")
+        VStack(spacing: 12) {
+            Image(systemName: "terminal")
+                .font(.system(size: 32))
+                .foregroundStyle(.secondary)
+
+            Text("Claude Code CLI Required")
+                .font(.headline)
+
+            Text("Install and sign in with the Claude Code CLI to view your usage.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Divider()
+                .padding(.vertical, 4)
+
+            VStack(alignment: .leading, spacing: 8) {
+                Label {
+                    Text("Install Claude Code CLI")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                } icon: {
+                    Text("1.")
+                        .font(.caption.bold())
+                }
+
+                HStack {
+                    Text("npm install -g @anthropic-ai/claude-code")
+                        .font(.system(.caption2, design: .monospaced))
+                        .padding(6)
+                        .background(Color(nsColor: .textBackgroundColor))
+                        .cornerRadius(4)
+
+                    Button {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString("npm install -g @anthropic-ai/claude-code", forType: .string)
+                    } label: {
+                        Image(systemName: "doc.on.doc")
+                    }
+                    .buttonStyle(.plain)
+                    .font(.caption2)
+                    .help("Copy to clipboard")
+                }
+
+                Label {
+                    Text("Run `claude` and sign in")
+                        .font(.caption)
+                } icon: {
+                    Text("2.")
+                        .font(.caption.bold())
+                }
+
+                Label {
+                    Text("Restart this app")
+                        .font(.caption)
+                } icon: {
+                    Text("3.")
+                        .font(.caption.bold())
                 }
             }
-            
-            Text("Run this command in Terminal:")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            
-            HStack {
-                Text("claude")
-                    .font(.system(.body, design: .monospaced))
-                    .padding(8)
-                    .background(Color(nsColor: .textBackgroundColor))
-                    .cornerRadius(6)
-                
-                Button(action: {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString("claude", forType: .string)
-                }) {
-                    Image(systemName: "doc.on.doc")
-                }
-                .buttonStyle(.plain)
-                .help("Copy to clipboard")
+
+            Button("Retry") {
+                authManager.checkAuthentication()
             }
-            
-            Text("This will open Claude Code and prompt you to sign in. After signing in, restart this app.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+            .padding(.top, 4)
         }
-        .padding(32)
+        .padding(24)
     }
 
     private var emptyState: some View {
@@ -119,7 +139,6 @@ struct ProviderCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Header
             HStack {
                 Text(usage.providerName)
                     .font(.system(.headline, design: .rounded))
@@ -127,10 +146,8 @@ struct ProviderCard: View {
                 remainingBadge
             }
 
-            // Progress bar
             UsageBar(used: usage.used)
 
-            // Reset timer
             if let resetDate = usage.resetDate {
                 HStack(spacing: 4) {
                     Image(systemName: "clock")
@@ -145,7 +162,6 @@ struct ProviderCard: View {
                 }
             }
 
-            // Details
             if !usage.details.isEmpty {
                 VStack(spacing: 6) {
                     ForEach(Array(usage.details.enumerated()), id: \.offset) { _, detail in
@@ -205,10 +221,3 @@ struct UsageBar: View {
         .frame(height: 6)
     }
 }
-//
-//  Popoverview.swift
-//  AI resource tracker
-//
-//  Created by Reind Dooyeweerd on 16/02/2026.
-//
-

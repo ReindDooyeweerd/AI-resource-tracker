@@ -14,22 +14,47 @@ final class UsageViewModel: ObservableObject {
     private var providers: [UsageProvider] = []
     private var timers: [AnyCancellable] = []
     private var authManager: AuthManager?
+    private var authCancellable: AnyCancellable?
 
-    init() {
-        // Provider will be added after auth is configured
-    }
-    
+    init() {}
+
     func configure(with authManager: AuthManager) {
+        guard self.authManager == nil else { return }
         self.authManager = authManager
+
+        // If already authenticated, add provider immediately
         if authManager.isAuthenticated {
-            addProvider(ClaudeCodeProvider(authManager: authManager))
+            addProviderIfNeeded(authManager: authManager)
         }
+
+        // Observe future auth changes
+        authCancellable = authManager.$isAuthenticated
+            .removeDuplicates()
+            .sink { [weak self] isAuthenticated in
+                guard let self else { return }
+                if isAuthenticated {
+                    self.addProviderIfNeeded(authManager: authManager)
+                } else {
+                    self.removeAllProviders()
+                }
+            }
+    }
+
+    private func addProviderIfNeeded(authManager: AuthManager) {
+        guard !providers.contains(where: { $0.id == "claude-code" }) else { return }
+        addProvider(ClaudeCodeProvider(authManager: authManager))
     }
 
     func addProvider(_ provider: UsageProvider) {
         providers.append(provider)
         startPolling(provider)
         Task { await refresh(provider) }
+    }
+
+    func removeAllProviders() {
+        providers.removeAll()
+        timers.removeAll()
+        usages.removeAll()
     }
 
     private func startPolling(_ provider: UsageProvider) {
