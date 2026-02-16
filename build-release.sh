@@ -26,14 +26,38 @@ mkdir -p "$RELEASE_DIR"
 
 # Build the app
 echo -e "${BLUE}🔨 Building release version...${NC}"
+echo -e "${BLUE}(This may take a minute, please wait...)${NC}"
 xcodebuild -project "$PROJECT_NAME.xcodeproj" \
            -scheme "$SCHEME_NAME" \
            -configuration Release \
            -derivedDataPath "$BUILD_DIR" \
+           -destination 'platform=macOS,arch=arm64' \
            CODE_SIGN_IDENTITY="" \
            CODE_SIGNING_REQUIRED=NO \
            CODE_SIGNING_ALLOWED=NO \
-           | xcpretty || true
+           > /dev/null 2>&1 &
+
+# Show progress dots while building
+BUILD_PID=$!
+while kill -0 $BUILD_PID 2>/dev/null; do
+    echo -n "."
+    sleep 2
+done
+wait $BUILD_PID
+BUILD_EXIT_CODE=$?
+echo ""
+
+if [ $BUILD_EXIT_CODE -ne 0 ]; then
+    echo -e "${BLUE}Build had warnings, retrying with verbose output...${NC}"
+    xcodebuild -project "$PROJECT_NAME.xcodeproj" \
+               -scheme "$SCHEME_NAME" \
+               -configuration Release \
+               -derivedDataPath "$BUILD_DIR" \
+               -destination 'platform=macOS,arch=arm64' \
+               CODE_SIGN_IDENTITY="" \
+               CODE_SIGNING_REQUIRED=NO \
+               CODE_SIGNING_ALLOWED=NO
+fi
 
 # Check if build succeeded
 if [ ! -d "$BUILD_DIR/Build/Products/Release/$APP_NAME" ]; then

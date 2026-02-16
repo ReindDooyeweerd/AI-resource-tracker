@@ -235,4 +235,4 @@ This is an unofficial app and is not affiliated with or endorsed by Anthropic. C
 
 ---
 
-Made with ❤️ by [Reind Dooyeweerd](https://github.com/YOUR_USERNAME)
+Made with ❤️ by [Reind Dooyeweerd](https://github.com/reinddooyeweerd)

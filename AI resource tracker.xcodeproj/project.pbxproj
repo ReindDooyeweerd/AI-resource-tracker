@@ -13,6 +13,7 @@
 		922A16482F432D7700AEFEC4 /* .githubworkflowsrelease.yml in Resources */ = {isa = PBXBuildFile; fileRef = 922A16472F432D7700AEFEC4 /* .githubworkflowsrelease.yml */; };
 		922A164A2F432D8200AEFEC4 /* build-release.sh in Resources */ = {isa = PBXBuildFile; fileRef = 922A16492F432D8200AEFEC4 /* build-release.sh */; };
 		922A164C2F432D8F00AEFEC4 /* CONTRIBUTING.md in Resources */ = {isa = PBXBuildFile; fileRef = 922A164B2F432D8F00AEFEC4 /* CONTRIBUTING.md */; };
+		922A164E2F432F5000AEFEC4 /* RELEASE_NOTES.md in Resources */ = {isa = PBXBuildFile; fileRef = 922A164D2F432F5000AEFEC4 /* RELEASE_NOTES.md */; };
 		9231986F2F431C1F008AA006 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 9231986E2F431C1F008AA006 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,7 @@
 		922A16472F432D7700AEFEC4 /* .githubworkflowsrelease.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .githubworkflowsrelease.yml; sourceTree = "<group>"; };
 		922A16492F432D8200AEFEC4 /* build-release.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-release.sh"; sourceTree = "<group>"; };
 		922A164B2F432D8F00AEFEC4 /* CONTRIBUTING.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTING.md; sourceTree = "<group>"; };
+		922A164D2F432F5000AEFEC4 /* RELEASE_NOTES.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = RELEASE_NOTES.md; sourceTree = "<group>"; };
 		923198462F42F3D5008AA006 /* AI resource tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AI resource tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9231986E2F431C1F008AA006 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -59,6 +61,7 @@
 				922A16472F432D7700AEFEC4 /* .githubworkflowsrelease.yml */,
 				922A16492F432D8200AEFEC4 /* build-release.sh */,
 				922A164B2F432D8F00AEFEC4 /* CONTRIBUTING.md */,
+				922A164D2F432F5000AEFEC4 /* RELEASE_NOTES.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +145,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				922A164E2F432F5000AEFEC4 /* RELEASE_NOTES.md in Resources */,
 				922A16482F432D7700AEFEC4 /* .githubworkflowsrelease.yml in Resources */,
 				922A164A2F432D8200AEFEC4 /* build-release.sh in Resources */,
 				922A16442F432D4A00AEFEC4 /* LICENSE in Resources */,
