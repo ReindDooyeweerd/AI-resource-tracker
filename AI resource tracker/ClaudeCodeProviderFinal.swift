@@ -16,7 +16,12 @@ final class ClaudeCodeProvider: UsageProvider {
     }
 
     private func fetchFromAPI() async -> UsageData? {
-        guard let accessToken = authManager.getSessionKey() else {
+        return await doFetch(isRetry: false)
+    }
+
+    private func doFetch(isRetry: Bool) async -> UsageData? {
+        let accessToken = await MainActor.run { authManager.getSessionKey() }
+        guard let accessToken else {
             print("⚠️ Missing OAuth access token")
             return nil
         }
@@ -46,8 +51,14 @@ final class ClaudeCodeProvider: UsageProvider {
                     let responseBody = String(data: data, encoding: .utf8) ?? "no body"
                     print("❌ API Error \(httpResponse.statusCode): \(responseBody)")
 
-                    if httpResponse.statusCode == 401 || httpResponse.statusCode == 403 {
-                        // Token may be stale — re-read from CLI keychain
+                    if (httpResponse.statusCode == 401 || httpResponse.statusCode == 403) && !isRetry {
+                        // Try refreshing the token
+                        print("🔄 Attempting token refresh...")
+                        let refreshed = await authManager.refreshToken()
+                        if refreshed {
+                            return await doFetch(isRetry: true)
+                        }
+                        // Refresh failed — re-check auth state
                         await MainActor.run {
                             authManager.checkAuthentication()
                         }

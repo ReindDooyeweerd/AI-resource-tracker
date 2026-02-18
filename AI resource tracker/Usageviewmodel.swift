@@ -4,6 +4,7 @@ import Combine
 @MainActor
 final class UsageViewModel: ObservableObject {
     @Published var usages: [UsageData] = []
+    @Published var hasProviders: Bool = false
 
     var menuBarLabel: String {
         guard let primary = usages.first else { return "—" }
@@ -47,6 +48,7 @@ final class UsageViewModel: ObservableObject {
 
     func addProvider(_ provider: UsageProvider) {
         providers.append(provider)
+        hasProviders = true
         startPolling(provider)
         Task { await refresh(provider) }
     }
@@ -55,6 +57,7 @@ final class UsageViewModel: ObservableObject {
         providers.removeAll()
         timers.removeAll()
         usages.removeAll()
+        hasProviders = false
     }
 
     private func startPolling(_ provider: UsageProvider) {

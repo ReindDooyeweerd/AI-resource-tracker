@@ -7,8 +7,10 @@ struct PopoverView: View {
         VStack(spacing: 0) {
             if !authManager.isAuthenticated {
                 notAuthenticatedView
-            } else if viewModel.usages.isEmpty {
+            } else if viewModel.usages.isEmpty && !viewModel.hasProviders {
                 emptyState
+            } else if viewModel.usages.isEmpty && viewModel.hasProviders {
+                loadingState
             } else {
                 ForEach(Array(viewModel.usages.enumerated()), id: \.offset) { _, usage in
                     ProviderCard(usage: usage)
@@ -126,6 +128,18 @@ struct PopoverView: View {
                 .font(.title2)
                 .foregroundStyle(.secondary)
             Text("No providers configured")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(32)
+    }
+
+    private var loadingState: some View {
+        VStack(spacing: 8) {
+            ProgressView()
+                .controlSize(.small)
+            Text("Fetching usage data...")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
